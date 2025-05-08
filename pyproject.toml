@@ -1,0 +1,12 @@
+[project]
+name = "ledger2beancount-prices"
+version = "0.1.0"
+description = "Convert ledger-cli prices to beancount prices"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+]
