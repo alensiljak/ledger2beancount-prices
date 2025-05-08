@@ -56,7 +56,7 @@ def main():
 
         # prices = []
         source = os.path.join(source_directory, filename)
-        destination = os.path.join(source_directory, filename.replace('.ledger', '.beancount'))
+        destination = os.path.join(source_directory, filename.replace('.ledger', '.bean'))
         
         # convert each line and write the converted prices to a new file
         # at the same time.
