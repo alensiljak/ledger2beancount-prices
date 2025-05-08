@@ -6,6 +6,7 @@
 '''
 
 import argparse
+import os
 import re
 
 
@@ -48,13 +49,32 @@ def main():
     ''' entry point '''
     # read command line arguments
     source_directory = get_source_directory()
-    # todo read each file in the given directory
+    # read each file in the given directory
     for filename in os.listdir(source_directory):
+        if not filename.endswith('.ledger'):
+            continue
+
+        prices = []
         # read each line
-        with open(filename, 'r') as f:
+        source = os.path.join(source_directory, filename)
+        with open(source, 'r', encoding='utf-8') as f:
+            print(f'Processing {source}')
+
             for line in f:
-                # todo convert to beancount format
-                pass
+                # convert to beancount format
+                price = parse_line(line)
+                if price:
+                    prices.append(price)
+                else:
+                    # price not parsed, write the line as is
+                    print(f'Warning: line not parsed: {line}')
+
+        # write the converted prices to a new file
+        destination = os.path.join(source_directory, filename.replace('.ledger', '.beancount'))
+        with open(destination, 'w', encoding='utf-8') as f:
+            for price in prices:
+                time_str = price['time'] if price['time'] else ''
+                f.write(f'{price["date"]} {time_str} price {price["commodity"]} {price["amount"]} {price["currency"]}\n')
 
 
 if __name__ == "__main__":
