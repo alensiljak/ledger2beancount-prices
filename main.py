@@ -25,7 +25,7 @@ def parse_line(line: str):
     ''' Parse a line of ledger prices file.
      Return the price object. '''
     # parse the line
-    regex = r'P (\d{4}-\d{2}-\d{2})(?:\s+(\d{2}:\d{2}:\d{2}))?\s+([A-Z_]+)\s+([0-9.]+)\s+([A-Z]+)'
+    regex = r'P (\d{4}-\d{2}-\d{2})(?:\s+(\d{2}:\d{2}:\d{2}))?\s+([A-Z0-9_"]+)\s+([0-9.]+)\s+([A-Z]+)'
     match = re.match(regex, line)
     if not match:
         return None
@@ -54,27 +54,27 @@ def main():
         if not filename.endswith('.ledger'):
             continue
 
-        prices = []
-        # read each line
+        # prices = []
         source = os.path.join(source_directory, filename)
-        with open(source, 'r', encoding='utf-8') as f:
-            print(f'Processing {source}')
-
-            for line in f:
-                # convert to beancount format
-                price = parse_line(line)
-                if price:
-                    prices.append(price)
-                else:
-                    # price not parsed, write the line as is
-                    print(f'Warning: line not parsed: {line}')
-
-        # write the converted prices to a new file
         destination = os.path.join(source_directory, filename.replace('.ledger', '.beancount'))
-        with open(destination, 'w', encoding='utf-8') as f:
-            for price in prices:
-                time_str = price['time'] if price['time'] else ''
-                f.write(f'{price["date"]} {time_str} price {price["commodity"]} {price["amount"]} {price["currency"]}\n')
+        
+        # convert each line and write the converted prices to a new file
+        # at the same time.
+        with open(source, 'r', encoding='utf-8') as src:
+            print(f'Processing {source}')
+            with open(destination, 'w', encoding='utf-8') as dest:
+
+                for line in src:
+                    # convert to beancount format
+                    price = parse_line(line)
+                    if price:
+                        # prices.append(price)
+                        time_str = price['time'] if price['time'] else ''
+                        dest.write(f'{price["date"]} {time_str} price {price["commodity"]} {price["amount"]} {price["currency"]}\n')
+                    else:
+                        # price not parsed, write the line as is
+                        print(f'Warning: line not parsed: {line}')
+                        dest.write(line)
 
 
 if __name__ == "__main__":

@@ -7,3 +7,8 @@ The price records are recognized by the following regex:
 ```regex
 P (\d{4}-\d{2}-\d{2})(?:\s+(\d{2}:\d{2}:\d{2}))?\s+([A-Z_]+)\s+([0-9.]+)\s+([A-Z]+)
 ```
+
+# Run
+```sh
+uv run main.py --src=<path to ledger prices directory>
+```
