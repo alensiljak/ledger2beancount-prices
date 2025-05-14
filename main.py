@@ -33,14 +33,18 @@ def parse_line(line: str):
         return None
 
     date = match.group(1)
-    time = match.group(2)
+    # time = match.group(2)
     commodity = match.group(3)
     amount = match.group(4)
     currency = match.group(5)
 
+    if '"' in commodity:
+        commodity = commodity.replace('"', '')
+
+
     return {
         "date": date,
-        "time": time,
+        #"time": time,
         "commodity": commodity,
         "amount": amount,
         "currency": currency,
